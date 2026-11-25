@@ -1,0 +1,54 @@
+name: Watch Telegram channel
+
+on:
+  schedule:
+    - cron: "17 * * * *"   # every hour, at :17
+  workflow_dispatch:        # "Run workflow" button for testing
+
+permissions:
+  contents: write
+
+concurrency:
+  group: watch-telegram
+  cancel-in-progress: false
+
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install ffmpeg
+        run: |
+          if ! command -v ffmpeg >/dev/null; then
+            sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+          fi
+
+      - name: Install Python packages
+        run: pip install -r requirements.txt
+
+      - name: Pull new videos
+        env:
+          TG_API_ID: ${{ secrets.TG_API_ID }}
+          TG_API_HASH: ${{ secrets.TG_API_HASH }}
+          TG_SESSION: ${{ secrets.TG_SESSION }}
+          TG_CHANNEL: ${{ secrets.TG_CHANNEL }}
+        run: python scripts/watch.py
+
+      - name: Save new clip metadata
+        run: |
+          git config user.name "telegram-watcher"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add clips state
+          if git diff --cached --quiet; then
+            echo "Nothing new."
+          else
+            git commit -m "Add new clips from Telegram"
+            git push
+          fi
