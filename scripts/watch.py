@@ -119,6 +119,21 @@ def extract_frames(path: Path, duration: float, out_dir: Path) -> list[str]:
     return names
 
 
+def load_audio(path: Path):
+    """Decode the audio track to 16 kHz mono float32 with ffmpeg.
+
+    We decode ourselves instead of letting faster-whisper use PyAV, because
+    newer PyAV releases broke faster-whisper's audio loading.
+    """
+    import numpy as np
+    raw = subprocess.run(
+        ["ffmpeg", "-v", "error", "-i", str(path), "-vn", "-ac", "1", "-ar", "16000",
+         "-f", "s16le", "-"],
+        capture_output=True, check=True,
+    ).stdout
+    return np.frombuffer(raw, dtype=np.int16).astype(np.float32) / 32768.0
+
+
 def transcribe(path: Path, has_audio: bool) -> dict:
     """Speech-to-text with faster-whisper. Returns text, language and timed segments."""
     global _whisper
@@ -127,7 +142,10 @@ def transcribe(path: Path, has_audio: bool) -> dict:
     if _whisper is None:
         from faster_whisper import WhisperModel  # heavy import, only when needed
         _whisper = WhisperModel(WHISPER_MODEL, device="cpu", compute_type="int8")
-    segments, info = _whisper.transcribe(str(path), vad_filter=True)
+    audio = load_audio(path)
+    if audio.size == 0:
+        return {"text": "", "language": None, "segments": []}
+    segments, info = _whisper.transcribe(audio, vad_filter=True)
     segs = [
         {"start": round(s.start, 1), "end": round(s.end, 1), "text": s.text.strip()}
         for s in segments
