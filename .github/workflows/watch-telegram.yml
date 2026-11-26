@@ -9,7 +9,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: repo-writes   # shared with the weekly suggestions job
+  group: repo-writes
   cancel-in-progress: false
 
 jobs:
@@ -47,13 +47,8 @@ jobs:
           TG_CHANNEL: ${{ secrets.TG_CHANNEL }}
         run: python scripts/watch.py
 
-      - name: Tag clips with Claude
-        env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: python scripts/tag.py
-
       - name: Save new clip metadata
-        if: always()   # keep progress even if tagging failed
+        if: always()   # keep progress even if a later clip failed
         run: |
           git config user.name "telegram-watcher"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"

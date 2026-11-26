@@ -204,7 +204,7 @@ async def main() -> int:
                     **info,
                     "frames": [f"frames/{f}" for f in frames],
                     "transcript": transcript,
-                    # Filled in by scripts/tag.py.
+                    # Filled in by the weekly Claude task (see REEL_TASK.md).
                     "tags": None,
                     "used_in_reel": None,
                 }

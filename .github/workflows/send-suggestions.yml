@@ -1,0 +1,42 @@
+name: Send Reel ideas to Telegram
+
+on:
+  push:
+    branches: [main]
+    paths: ["suggestions/*.md"]
+  workflow_dispatch:
+    inputs:
+      file:
+        description: "Idea file to send again, e.g. suggestions/2026-11-29.md"
+        required: true
+
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - run: pip install telethon==1.46.0
+
+      - name: Send new idea files
+        env:
+          TG_API_ID: ${{ secrets.TG_API_ID }}
+          TG_API_HASH: ${{ secrets.TG_API_HASH }}
+          TG_SESSION: ${{ secrets.TG_SESSION }}
+          BEFORE: ${{ github.event.before }}
+          MANUAL_FILE: ${{ inputs.file }}
+        run: |
+          if [ -n "$MANUAL_FILE" ]; then
+            files="$MANUAL_FILE"
+          else
+            files=$(git diff --name-only --diff-filter=A "$BEFORE" HEAD -- 'suggestions/*.md' || true)
+          fi
+          echo "Files: $files"
+          python scripts/send_suggestions.py $files
