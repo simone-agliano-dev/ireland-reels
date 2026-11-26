@@ -54,7 +54,7 @@ In the repo: **Settings > Secrets and variables > Actions > New repository secre
 Go to **Actions > Watch Telegram channel > Run workflow**. After a minute or two, new folders should appear under `clips/`.
 
 ## Notes
-- **Claude cost**: tagging is roughly 1 to 2 cents per clip; a weekly suggestion run is roughly 10 to 35 cents, so about 1 to 3 euro a month at a few clips a day. Set a monthly spend limit in the Claude Console if you want a hard cap.
+- **Claude cost**: tagging is roughly 1 to 2 cents per clip; a weekly suggestion run is roughly 10 to 35 cents, so about $2 to $4 a month at a few clips a day. Set a monthly spend limit in the Claude Console if you want a hard cap.
 - **Privacy**: if your channel has a public username, anyone who finds it can watch the videos. To keep them private, make the channel private in Telegram and set `TG_CHANNEL` to its numeric id.- **First run** processes up to 15 videos (`MAX_PER_RUN`); older ones are picked up in following runs.
 - **GitHub Actions minutes**: a private repo gets 2,000 free minutes a month. An hourly run with nothing new takes under a minute, so this uses roughly 500 to 800 minutes a month.
 - GitHub pauses scheduled workflows after 60 days with no activity in the repo. New clips keep it active; if you stop posting for 2 months, re-enable it from the Actions tab.
