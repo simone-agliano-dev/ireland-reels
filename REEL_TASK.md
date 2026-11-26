@@ -11,6 +11,7 @@ Work on `main`. Run `git pull` first.
 For each `clips/*/meta.json` where `tags` is `null`:
 - Skip it if `transcript` is `null` and the clip was posted less than 2 days ago (the hourly job hasn't transcribed it yet). Otherwise tag it.
 - Look at every frame image, and read the transcript and caption.
+- Transcripts come from automatic speech recognition. Treat them with care: short phrases like "Thank you for watching" on a quiet clip are usually recognition errors, and background music can show up as song lyrics. Trust the frames when they disagree.
 - Describe only what is visible or said. Don't invent places or events. Keep strings short, in English.
 - Set `tags` to exactly this shape:
 
