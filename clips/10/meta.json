@@ -1,0 +1,25 @@
+{
+  "message_id": 10,
+  "telegram_link": "https://t.me/simone_ireland_clips/10",
+  "posted_at": "2026-11-26T11:55:17+00:00",
+  "caption": "",
+  "duration_s": 9.13,
+  "width": 720,
+  "height": 1280,
+  "orientation": "vertical",
+  "has_audio": true,
+  "size_mb": 6.2,
+  "frames": [
+    "frames/frame_1.jpg",
+    "frames/frame_2.jpg",
+    "frames/frame_3.jpg",
+    "frames/frame_4.jpg"
+  ],
+  "transcript": {
+    "text": "",
+    "language": null,
+    "segments": []
+  },
+  "tags": null,
+  "used_in_reel": null
+}

@@ -1,0 +1,31 @@
+{
+  "message_id": 7,
+  "telegram_link": "https://t.me/simone_ireland_clips/7",
+  "posted_at": "2026-11-26T11:55:17+00:00",
+  "caption": "",
+  "duration_s": 14.61,
+  "width": 720,
+  "height": 1280,
+  "orientation": "vertical",
+  "has_audio": true,
+  "size_mb": 5.2,
+  "frames": [
+    "frames/frame_1.jpg",
+    "frames/frame_2.jpg",
+    "frames/frame_3.jpg",
+    "frames/frame_4.jpg"
+  ],
+  "transcript": {
+    "text": "Actually, thanks for the play!",
+    "language": "en",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 14.0,
+        "text": "Actually, thanks for the play!"
+      }
+    ]
+  },
+  "tags": null,
+  "used_in_reel": null
+}
