@@ -2,6 +2,9 @@
 
 Turns the videos you post to a Telegram channel into Instagram Reel suggestions about life in Ireland.
 
+1. **Every hour:** new videos are downloaded, transcribed, tagged by Claude (place, scene, topics, mood, hook score), then deleted.
+2. **Every Sunday at 10:00 UTC** (or whenever you press *Run workflow* on **Suggest Reels**): Claude turns your recent clips into 1 to 3 Reel ideas, with cut order, trim points, hook text, caption and hashtags. They're saved in `suggestions/` and sent to your Telegram **Saved Messages**.
+
 Telegram is the archive: originals stay there. This repo only keeps small metadata per clip (duration, orientation, a few preview frames, a link back to the Telegram message).
 
 ## How it works
@@ -11,8 +14,14 @@ Telegram is the archive: originals stay there. This repo only keeps small metada
 1. finds videos posted to your channel since the last run,
 2. downloads each one to a temporary folder,
 3. saves `clips/<message_id>/meta.json` and `frames/frame_1..4.jpg` (about 100 KB per clip),
-4. deletes the video,
-5. commits the new metadata to the repo.
+4. transcribes any speech with [faster-whisper](https://github.com/SYSTRAN/faster-whisper) (runs on GitHub's machine, free),
+5. deletes the video,
+6. `scripts/tag.py` sends the frames and transcript to Claude and saves the tags in `meta.json`,
+7. commits the new metadata to the repo.
+
+Clips saved before transcription existed are re-downloaded from Telegram once and transcribed automatically.
+
+`.github/workflows/suggest-reels.yml` runs `scripts/suggest.py`. It uses tagged clips from the last 30 days that haven't been suggested in the last 14 days. Set `"used_in_reel": true` in a clip's `meta.json` to stop it being suggested again.
 
 ## One-time setup (about 10 minutes)
 
@@ -39,16 +48,17 @@ In the repo: **Settings > Secrets and variables > Actions > New repository secre
 | `TG_API_HASH` | your api_hash |
 | `TG_SESSION` | the session string from step 2 |
 | `TG_CHANNEL` | your channel's username without `@` (e.g. `simone_ireland_clips`), or its numeric id for a private channel |
+| `ANTHROPIC_API_KEY` | an API key from https://platform.claude.com (Settings > API keys). Needs a little prepaid credit. |
 
 ### 4. Test it
 Go to **Actions > Watch Telegram channel > Run workflow**. After a minute or two, new folders should appear under `clips/`.
 
 ## Notes
-- **First run** processes up to 15 videos (`MAX_PER_RUN`); older ones are picked up in following runs.
+- **Claude cost**: tagging is roughly 1 to 2 cents per clip; a weekly suggestion run is roughly 10 to 35 cents, so about 1 to 3 euro a month at a few clips a day. Set a monthly spend limit in the Claude Console if you want a hard cap.
+- **Privacy**: if your channel has a public username, anyone who finds it can watch the videos. To keep them private, make the channel private in Telegram and set `TG_CHANNEL` to its numeric id.- **First run** processes up to 15 videos (`MAX_PER_RUN`); older ones are picked up in following runs.
 - **GitHub Actions minutes**: a private repo gets 2,000 free minutes a month. An hourly run with nothing new takes under a minute, so this uses roughly 500 to 800 minutes a month.
 - GitHub pauses scheduled workflows after 60 days with no activity in the repo. New clips keep it active; if you stop posting for 2 months, re-enable it from the Actions tab.
 - To reprocess everything, set `state/last_message_id.json` back to `0`.
 
 ## Coming next
-- Transcripts of speech in each clip and content tags (place, food, weather, talking to camera).
-- Weekly Reel suggestions: clip order, trim points, hook, caption, hashtags.
+- Optional automatic rough cut of a suggested Reel.

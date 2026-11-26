@@ -16,6 +16,10 @@ Environment variables (GitHub Actions secrets):
 Optional:
   MAX_PER_RUN             max videos to process per run (default 15)
   FRAMES_PER_CLIP         preview frames per clip (default 4)
+  WHISPER_MODEL           speech-to-text model size (default "small")
+
+Clips saved before transcripts existed (transcript is null) are re-downloaded
+from Telegram once and transcribed.
 """
 
 import asyncio
@@ -37,6 +41,9 @@ STATE_FILE = ROOT / "state" / "last_message_id.json"
 MAX_PER_RUN = int(os.environ.get("MAX_PER_RUN", "15"))
 FRAMES_PER_CLIP = int(os.environ.get("FRAMES_PER_CLIP", "4"))
 FRAME_WIDTH = 480
+WHISPER_MODEL = os.environ.get("WHISPER_MODEL", "small")
+
+_whisper = None
 
 
 def load_last_id() -> int:
@@ -112,6 +119,53 @@ def extract_frames(path: Path, duration: float, out_dir: Path) -> list[str]:
     return names
 
 
+def transcribe(path: Path, has_audio: bool) -> dict:
+    """Speech-to-text with faster-whisper. Returns text, language and timed segments."""
+    global _whisper
+    if not has_audio:
+        return {"text": "", "language": None, "segments": []}
+    if _whisper is None:
+        from faster_whisper import WhisperModel  # heavy import, only when needed
+        _whisper = WhisperModel(WHISPER_MODEL, device="cpu", compute_type="int8")
+    segments, info = _whisper.transcribe(str(path), vad_filter=True)
+    segs = [
+        {"start": round(s.start, 1), "end": round(s.end, 1), "text": s.text.strip()}
+        for s in segments
+    ]
+    return {
+        "text": " ".join(s["text"] for s in segs),
+        "language": info.language if segs else None,
+        "segments": segs,
+    }
+
+
+def write_meta(clip_dir: Path, meta: dict) -> None:
+    clip_dir.mkdir(parents=True, exist_ok=True)
+    (clip_dir / "meta.json").write_text(json.dumps(meta, indent=2, ensure_ascii=False) + "\n")
+
+
+async def backfill_transcripts(client, channel, budget: int) -> int:
+    """Transcribe clips saved before transcription existed."""
+    pending = []
+    for meta_file in sorted(CLIPS_DIR.glob("*/meta.json"), key=lambda f: int(f.parent.name)):
+        meta = json.loads(meta_file.read_text())
+        if meta.get("transcript") is None:
+            pending.append((meta_file.parent, meta))
+    done = 0
+    for clip_dir, meta in pending[:budget]:
+        msg = await client.get_messages(channel, ids=meta["message_id"])
+        if msg is None or not is_video(msg):
+            meta["transcript"] = {"text": "", "language": None, "segments": [], "note": "message missing"}
+        else:
+            with tempfile.TemporaryDirectory() as tmp:
+                print(f"Backfilling transcript for message {msg.id} ...")
+                video_path = Path(await msg.download_media(file=tmp))
+                meta["transcript"] = transcribe(video_path, meta.get("has_audio", True))
+        write_meta(clip_dir, meta)
+        done += 1
+    return done
+
+
 async def main() -> int:
     api_id = int(os.environ["TG_API_ID"])
     api_hash = os.environ["TG_API_HASH"]
@@ -139,6 +193,7 @@ async def main() -> int:
                     video_path = Path(await msg.download_media(file=tmp))
                     info = probe(video_path)
                     frames = extract_frames(video_path, info["duration_s"], clip_dir / "frames")
+                    transcript = transcribe(video_path, info["has_audio"])
                 # Temp folder (and the video) is deleted here.
 
                 meta = {
@@ -148,18 +203,23 @@ async def main() -> int:
                     "caption": msg.message or "",
                     **info,
                     "frames": [f"frames/{f}" for f in frames],
-                    # Filled in by the analysis step (transcript + tags).
-                    "transcript": None,
+                    "transcript": transcript,
+                    # Filled in by scripts/tag.py.
                     "tags": None,
                     "used_in_reel": None,
                 }
-                (clip_dir / "meta.json").write_text(json.dumps(meta, indent=2, ensure_ascii=False) + "\n")
+                write_meta(clip_dir, meta)
                 processed += 1
                 print(f"  saved clips/{msg.id}: {info['duration_s']}s {info['orientation']}")
 
             # Advance past every message (videos or not) so we never re-scan it.
             last_id = msg.id
             save_last_id(last_id)
+
+        if processed < MAX_PER_RUN:
+            backfilled = await backfill_transcripts(client, channel, MAX_PER_RUN - processed)
+            if backfilled:
+                print(f"Backfilled {backfilled} transcript(s).")
 
     print(f"Done. {processed} new video(s).")
     return 0
