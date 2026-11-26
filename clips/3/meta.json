@@ -15,7 +15,17 @@
     "frames/frame_3.jpg",
     "frames/frame_4.jpg"
   ],
-  "transcript": null,
+  "transcript": {
+    "text": "Thank you very much!",
+    "language": "en",
+    "segments": [
+      {
+        "start": 2.6,
+        "end": 4.6,
+        "text": "Thank you very much!"
+      }
+    ]
+  },
   "tags": null,
   "used_in_reel": null
 }

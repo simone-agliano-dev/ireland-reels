@@ -15,7 +15,17 @@
     "frames/frame_3.jpg",
     "frames/frame_4.jpg"
   ],
-  "transcript": null,
+  "transcript": {
+    "text": "Get a shot of Mickey Finsley, get it!",
+    "language": "en",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 6.0,
+        "text": "Get a shot of Mickey Finsley, get it!"
+      }
+    ]
+  },
   "tags": null,
   "used_in_reel": null
 }

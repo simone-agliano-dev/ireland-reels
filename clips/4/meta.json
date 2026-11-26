@@ -15,7 +15,11 @@
     "frames/frame_3.jpg",
     "frames/frame_4.jpg"
   ],
-  "transcript": null,
+  "transcript": {
+    "text": "",
+    "language": null,
+    "segments": []
+  },
   "tags": null,
   "used_in_reel": null
 }
