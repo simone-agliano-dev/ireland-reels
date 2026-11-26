@@ -2,7 +2,7 @@ name: Watch Telegram channel
 
 on:
   schedule:
-    - cron: "17 * * * *"   # every hour, at :17
+    - cron: "17 * * * *"   # every hour, at :17 (GitHub may skip some; the weekly task also starts it)
   workflow_dispatch:        # "Run workflow" button for testing
 
 permissions:
