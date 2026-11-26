@@ -1,0 +1,31 @@
+{
+  "message_id": 16,
+  "telegram_link": "https://t.me/simone_ireland_clips/16",
+  "posted_at": "2026-11-26T11:55:48+00:00",
+  "caption": "",
+  "duration_s": 8.38,
+  "width": 720,
+  "height": 1280,
+  "orientation": "vertical",
+  "has_audio": true,
+  "size_mb": 3.0,
+  "frames": [
+    "frames/frame_1.jpg",
+    "frames/frame_2.jpg",
+    "frames/frame_3.jpg",
+    "frames/frame_4.jpg"
+  ],
+  "transcript": {
+    "text": "Thank you very much for watching.",
+    "language": "en",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 2.0,
+        "text": "Thank you very much for watching."
+      }
+    ]
+  },
+  "tags": null,
+  "used_in_reel": null
+}

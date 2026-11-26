@@ -5,12 +5,18 @@ A scheduled Claude task runs these steps once a week. It uses Simone's Claude su
 Simone makes Instagram Reels about their life living in Ireland. Raw clips come from a Telegram channel. The hourly GitHub job saves, for each clip, `clips/<message_id>/meta.json` (length, orientation, caption, speech transcript with timestamps, Telegram link) and 4 evenly spaced preview frames in `clips/<message_id>/frames/`.
 
 ## 1. Get the latest clips
-Work on `main`. Run `git pull` first.
+GitHub's hourly schedule often skips runs, so first make sure every clip from Telegram has been pulled in:
+1. Start the watcher: `gh api -X POST repos/simone-agliano-dev/ireland-reels/actions/workflows/watch-telegram.yml/dispatches -f ref=main`.
+2. Wait for that run to finish (check `gh api "repos/simone-agliano-dev/ireland-reels/actions/runs?per_page=1&event=workflow_dispatch"` every 30 seconds).
+3. If it succeeded and its log says `Reached MAX_PER_RUN`, start it again, up to 4 runs in total. If a run fails, note it in your report and carry on with the clips you have.
+
+Then work on `main` and run `git pull`.
 
 ## 2. Tag clips
 For each `clips/*/meta.json` where `tags` is `null`:
 - Skip it if `transcript` is `null` and the clip was posted less than 2 days ago (the hourly job hasn't transcribed it yet). Otherwise tag it.
 - Look at every frame image, and read the transcript and caption.
+- Transcripts come from automatic speech recognition. Treat them with care: short phrases like "Thank you for watching" on a quiet clip are usually recognition errors, and background music can show up as song lyrics. Trust the frames when they disagree.
 - Describe only what is visible or said. Don't invent places or events. Keep strings short, in English.
 - Set `tags` to exactly this shape:
 

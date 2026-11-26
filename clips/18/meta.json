@@ -1,0 +1,46 @@
+{
+  "message_id": 18,
+  "telegram_link": "https://t.me/simone_ireland_clips/18",
+  "posted_at": "2026-11-26T11:55:48+00:00",
+  "caption": "",
+  "duration_s": 18.69,
+  "width": 720,
+  "height": 1280,
+  "orientation": "vertical",
+  "has_audio": true,
+  "size_mb": 6.6,
+  "frames": [
+    "frames/frame_1.jpg",
+    "frames/frame_2.jpg",
+    "frames/frame_3.jpg",
+    "frames/frame_4.jpg"
+  ],
+  "transcript": {
+    "text": "I'm dressed up in a cowboy gown with a heart of rust to hide In the morning, day and night, I was recalling my energy passing by Kill a toast before the journey, she looked up around here Come to me and find us myself, see if I was truly there",
+    "language": "en",
+    "segments": [
+      {
+        "start": 1.7,
+        "end": 5.7,
+        "text": "I'm dressed up in a cowboy gown with a heart of rust to hide"
+      },
+      {
+        "start": 5.7,
+        "end": 9.7,
+        "text": "In the morning, day and night, I was recalling my energy passing by"
+      },
+      {
+        "start": 9.7,
+        "end": 14.7,
+        "text": "Kill a toast before the journey, she looked up around here"
+      },
+      {
+        "start": 14.7,
+        "end": 18.7,
+        "text": "Come to me and find us myself, see if I was truly there"
+      }
+    ]
+  },
+  "tags": null,
+  "used_in_reel": null
+}
