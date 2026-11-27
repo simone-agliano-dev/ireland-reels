@@ -1,0 +1,31 @@
+{
+  "message_id": 22,
+  "telegram_link": "https://t.me/simone_ireland_clips/22",
+  "posted_at": "2026-11-27T18:46:53+00:00",
+  "caption": "",
+  "duration_s": 17.93,
+  "width": 1080,
+  "height": 1920,
+  "orientation": "vertical",
+  "has_audio": true,
+  "size_mb": 16.0,
+  "frames": [
+    "frames/frame_1.jpg",
+    "frames/frame_2.jpg",
+    "frames/frame_3.jpg",
+    "frames/frame_4.jpg"
+  ],
+  "transcript": {
+    "text": "un gruppo di ragazzi che si mette con la bici, con le radio a duplino",
+    "language": "it",
+    "segments": [
+      {
+        "start": 0.3,
+        "end": 5.3,
+        "text": "un gruppo di ragazzi che si mette con la bici, con le radio a duplino"
+      }
+    ]
+  },
+  "tags": null,
+  "used_in_reel": null
+}

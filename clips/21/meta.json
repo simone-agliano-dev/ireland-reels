@@ -1,0 +1,51 @@
+{
+  "message_id": 21,
+  "telegram_link": "https://t.me/simone_ireland_clips/21",
+  "posted_at": "2026-11-27T10:44:19+00:00",
+  "caption": "",
+  "duration_s": 23.81,
+  "width": 1080,
+  "height": 1920,
+  "orientation": "vertical",
+  "has_audio": true,
+  "size_mb": 21.7,
+  "frames": [
+    "frames/frame_1.jpg",
+    "frames/frame_2.jpg",
+    "frames/frame_3.jpg",
+    "frames/frame_4.jpg"
+  ],
+  "transcript": {
+    "text": "uno dei privi leggi di lavorare in Irlanda allora santo stefano acquisica una boxing day maricata e domenica 26 però l'Irlanda ti dice non è sofferto del giorno ok può soffrire il 28 infatti cercavo di inserire il giorno di ferro e pittio per il 28 non riuscivo perché in realtà è già ben colore",
+    "language": "it",
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 3.0,
+        "text": "uno dei privi leggi di lavorare in Irlanda"
+      },
+      {
+        "start": 3.0,
+        "end": 10.0,
+        "text": "allora santo stefano acquisica una boxing day maricata e domenica 26"
+      },
+      {
+        "start": 10.0,
+        "end": 15.0,
+        "text": "però l'Irlanda ti dice non è sofferto del giorno ok può soffrire il 28"
+      },
+      {
+        "start": 15.0,
+        "end": 19.0,
+        "text": "infatti cercavo di inserire il giorno di ferro e pittio"
+      },
+      {
+        "start": 19.0,
+        "end": 24.0,
+        "text": "per il 28 non riuscivo perché in realtà è già ben colore"
+      }
+    ]
+  },
+  "tags": null,
+  "used_in_reel": null
+}
