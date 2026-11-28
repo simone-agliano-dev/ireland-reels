@@ -1,0 +1,31 @@
+{
+  "message_id": 23,
+  "telegram_link": "https://t.me/simone_ireland_clips/23",
+  "posted_at": "2026-11-28T11:14:14+00:00",
+  "caption": "",
+  "duration_s": 8.63,
+  "width": 720,
+  "height": 1280,
+  "orientation": "vertical",
+  "has_audio": true,
+  "size_mb": 3.1,
+  "frames": [
+    "frames/frame_1.jpg",
+    "frames/frame_2.jpg",
+    "frames/frame_3.jpg",
+    "frames/frame_4.jpg"
+  ],
+  "transcript": {
+    "text": "L'aeroporto di Dublino, un bel preserva per il Dobrino d'Alizio.",
+    "language": "it",
+    "segments": [
+      {
+        "start": 0.1,
+        "end": 5.1,
+        "text": "L'aeroporto di Dublino, un bel preserva per il Dobrino d'Alizio."
+      }
+    ]
+  },
+  "tags": null,
+  "used_in_reel": null
+}
